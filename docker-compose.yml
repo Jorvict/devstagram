@@ -1,0 +1,34 @@
+services:
+  laravel.test:
+    build:
+      context: .
+      dockerfile: docker/8.2/Dockerfile
+    image: devstagram-app
+    container_name: devstagram-app
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+
+    volumes:
+      - .:/var/www
+    depends_on:
+      - mysql
+    working_dir: /var/www
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  mysql:
+    image: mysql:5.7
+    container_name: devstagram-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: devstagram
+      MYSQL_USER: devstagram_sa
+      MYSQL_PASSWORD: 12345*
+    ports:
+      - "3310:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
